@@ -2,10 +2,12 @@
 
 an adaptation of [micro](https://github.com/zeit/micro) for [deno](https://deno.land/)
 
+Except this one will serve any handlers it finds on the file system that mirror the request.
+
 ## Usage
 
 ```sh
-deno --allow-net --allow-read index.ts handler.ts
+deno --allow-net --allow-read index.ts <directoryToServeFiles> [--port 8080]
 ```
 
 ## Todo
