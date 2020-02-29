@@ -4,7 +4,7 @@ an adaptation of [micro](https://github.com/zeit/micro) for [deno](https://deno.
 
 ## Usage
 
-```
+```sh
 deno --allow-net --allow-read index.ts handler.ts
 ```
 
