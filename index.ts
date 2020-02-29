@@ -1,5 +1,5 @@
-import { serve } from "https://deno.land/std@v0.33.0/http/server.ts";
-import { red } from "https://deno.land/std@v0.33.0/fmt/colors.ts";
+import { serve } from "https://deno.land/std@v0.35.0/http/server.ts";
+import { red } from "https://deno.land/std@v0.35.0/fmt/colors.ts";
 
 if (Deno.args.length === 0 || Deno.args.length > 1) {
   console.error(red("Need a handler"));
