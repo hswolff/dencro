@@ -1,6 +1,9 @@
-import { serve } from "https://deno.land/std@v0.35.0/http/server.ts";
+import {
+  serve,
+  ServerRequest
+} from "https://deno.land/std@v0.35.0/http/server.ts";
 import { parse } from "https://deno.land/std@v0.35.0/flags/mod.ts";
-import { red } from "https://deno.land/std@v0.35.0/fmt/colors.ts";
+import { red, green } from "https://deno.land/std@v0.35.0/fmt/colors.ts";
 
 const args = parse(Deno.args, {
   default: {
@@ -26,21 +29,40 @@ console.log(`Listening at http://localhost:${args.port}/`);
 
 for await (const req of s) {
   if (req.url.endsWith("favicon.ico")) {
-    req.respond({});
+    req.respond({
+      status: 200
+    });
     continue;
   }
 
-  console.log(req.url);
+  const logRequest = createLogRequest(req);
+
+  let handlerPath;
+  try {
+    handlerPath = await getHandlerPath(req.url);
+  } catch (error) {
+    req.respond({
+      status: 404,
+      body: `Error: No handler for ${req.url}`
+    });
+    logRequest(false);
+    continue;
+  }
 
   try {
-    const handler = await import(await getHandlerPath(req.url));
+    const handler = await import(handlerPath);
 
     req.respond({
       body: handler.default(req)
     });
-  } catch (error) {
-    console.error(error);
-    req.respond({});
+
+    logRequest(true);
+  } catch {
+    req.respond({
+      status: 500,
+      body: `Error: Unable to parse handler at ${req.url}`
+    });
+    logRequest(false);
   }
 }
 
@@ -52,9 +74,18 @@ async function getHandlerPath(requestUrl: string): Promise<string> {
   let result;
   try {
     result = await Deno.realpath("." + requestAsFile + ".ts");
-  } catch (error) {
+  } catch {
     result = await Deno.realpath("." + `${requestUrl}/index` + ".ts");
   }
 
   return result;
+}
+
+function createLogRequest(req: ServerRequest): (success: boolean) => void {
+  const start = performance.now();
+  return (success = true) => {
+    const end = performance.now();
+    const msg = `${req.url} in ${end - start}ms`;
+    console.log(success ? green(msg) : red(msg));
+  };
 }
