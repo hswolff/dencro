@@ -8,15 +8,19 @@ const args = parse(Deno.args, {
   }
 });
 
-if (args._.length === 0 || args._.length > 1) {
-  console.error(red("Need a handler"));
+const handlerFile = args._[0] ?? "index.ts";
+
+let handlerPath;
+try {
+  handlerPath = await Deno.realpath(handlerFile);
+} catch (error) {
+  console.error(red(`No handler found. Tried loading: ${handlerFile}`));
   Deno.exit(1);
 }
 
 const s = serve({ port: args.port });
 console.log(`http://localhost:${args.port}/`);
 
-const handlerPath = await Deno.realpath(args._[0]);
 const handler = await import(handlerPath);
 
 for await (const req of s) {
