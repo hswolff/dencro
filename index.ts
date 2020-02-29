@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@v0.35.0/http/server.ts";
 import { parse } from "https://deno.land/std@v0.35.0/flags/mod.ts";
+import { red } from "https://deno.land/std@v0.35.0/fmt/colors.ts";
 
 const args = parse(Deno.args, {
   default: {
@@ -7,8 +8,21 @@ const args = parse(Deno.args, {
   }
 });
 
+// Allow a user to set what directory to serve files from
+if (args._.length === 1) {
+  const directoryArg = args._[0];
+  try {
+    const fullPath = await Deno.realpath(directoryArg);
+    Deno.chdir(fullPath);
+  } catch (error) {
+    console.error(red(`Unable to serve files from: ${directoryArg}`));
+  }
+}
+
+console.log("Serving files from:", Deno.cwd());
+
 const s = serve({ port: args.port });
-console.log(`http://localhost:${args.port}/`);
+console.log(`Listening at http://localhost:${args.port}/`);
 
 for await (const req of s) {
   if (req.url.endsWith("favicon.ico")) {
