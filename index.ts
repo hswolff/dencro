@@ -1,6 +1,6 @@
-import { serve } from "https://deno.land/std@v0.35.0/http/server.ts";
-import { red } from "https://deno.land/std@v0.35.0/fmt/colors.ts";
-import { parse } from "https://deno.land/std@v0.35.0/flags/mod.ts";
+import { serve } from "http/server";
+import { red } from "fmt/colors";
+import { parse } from "flags";
 
 const args = parse(Deno.args, {
   default: {

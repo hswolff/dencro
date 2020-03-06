@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "http/server": "https://deno.land/std@v0.35.0/http/server.ts",
+    "fmt/colors": "https://deno.land/std@v0.35.0/fmt/colors.ts",
+    "flags": "https://deno.land/std@v0.35.0/flags/mod.ts"
+  }
+}
