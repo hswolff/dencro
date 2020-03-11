@@ -1,9 +1,9 @@
 import {
   serve,
   ServerRequest
-} from "http/server";
-import { parse } from "flags";
-import { red, green } from "fmt/colors";
+} from "http/server.ts";
+import { parse } from "flags/mod.ts";
+import { red, green } from "fmt/colors.ts";
 
 async function createServer() {
   const args = parse(Deno.args, {

@@ -4,4 +4,4 @@ run:
 		--allow-net \
 		--allow-read \
 		index.ts \
-		example/handler.ts
+		example
