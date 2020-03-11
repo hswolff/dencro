@@ -1,6 +1,9 @@
-import { serve } from "http/server";
-import { red } from "fmt/colors";
+import {
+  serve,
+  ServerRequest
+} from "http/server";
 import { parse } from "flags";
+import { red, green } from "fmt/colors";
 
 const args = parse(Deno.args, {
   default: {
@@ -8,24 +11,81 @@ const args = parse(Deno.args, {
   }
 });
 
-if (args._.length === 0 || args._.length > 1) {
-  console.error(red("Need a handler"));
-  Deno.exit(1);
+// Allow a user to set what directory to serve files from
+if (args._.length === 1) {
+  const directoryArg = args._[0];
+  try {
+    const fullPath = await Deno.realpath(directoryArg);
+    Deno.chdir(fullPath);
+  } catch (error) {
+    console.error(red(`Unable to serve files from: ${directoryArg}`));
+  }
 }
 
-const s = serve({ port: args.port });
-console.log(`http://localhost:${args.port}/`);
+console.log("Serving files from:", Deno.cwd());
 
-const handlerPath = await Deno.realpath(args._[0]);
-const handler = await import(handlerPath);
+const s = serve({ port: args.port });
+console.log(`Listening at http://localhost:${args.port}/`);
 
 for await (const req of s) {
-  console.log(req.url);
-  if (req.url === "/") {
+  if (req.url.endsWith("favicon.ico")) {
+    req.respond({
+      status: 200
+    });
+    continue;
+  }
+
+  const logRequest = createLogRequest(req);
+
+  let handlerPath;
+  try {
+    handlerPath = await getHandlerPath(req.url);
+  } catch (error) {
+    req.respond({
+      status: 404,
+      body: `Error: No handler for ${req.url}`
+    });
+    logRequest(false);
+    continue;
+  }
+
+  try {
+    const handler = await import(handlerPath);
+
     req.respond({
       body: handler.default(req)
     });
-  } else {
-    req.respond({});
+
+    logRequest(true);
+  } catch {
+    req.respond({
+      status: 500,
+      body: `Error: Unable to parse handler at ${req.url}`
+    });
+    logRequest(false);
   }
+}
+
+async function getHandlerPath(requestUrl: string): Promise<string> {
+  const requestAsFile = requestUrl.endsWith("/")
+    ? `${requestUrl}index`
+    : requestUrl;
+
+  let result;
+  try {
+    result = await Deno.realpath("." + requestAsFile + ".ts");
+  } catch {
+    result = await Deno.realpath("." + `${requestUrl}/index` + ".ts");
+  }
+
+  return result;
+}
+
+function createLogRequest(req: ServerRequest): (success: boolean) => void {
+  const start = performance.now();
+  return (success = true) => {
+    const end = performance.now();
+    const msg = `${req.url} in ${end - start}ms`;
+    console.log(success ? green(msg) : red(msg));
+  };
 }
