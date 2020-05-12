@@ -18,12 +18,12 @@ dencro [directory] [options]
 
 - `[directory]` - directory which you want to serve
 - `[options]` - Aditional options
-  - `--port` - set the port on which to serve
+  - `--port` - set the port on which to serve. Default: `8080`
 
 **Example:**
 
 ```sh
-~ dencro . --port 8080
+~ dencro .
 Serving files from: ~
 Listening at http://localhost:8080/
 ```
