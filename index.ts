@@ -3,8 +3,8 @@ import { serve, ServerRequest, parse, red, green } from "./deps.ts";
 async function createServer() {
   const args = parse(Deno.args, {
     default: {
-      port: 8080
-    }
+      port: 8080,
+    },
   });
 
   // Allow a user to set what directory to serve files from
@@ -26,7 +26,7 @@ async function createServer() {
   for await (const req of s) {
     if (req.url.endsWith("favicon.ico")) {
       req.respond({
-        status: 200
+        status: 200,
       });
       continue;
     }
@@ -39,7 +39,7 @@ async function createServer() {
     } catch (error) {
       req.respond({
         status: 404,
-        body: `Error: No handler for ${req.url}`
+        body: `Error: No handler for ${req.url}`,
       });
       logRequest(false);
       continue;
@@ -49,14 +49,14 @@ async function createServer() {
       const handler = await import(handlerPath);
 
       req.respond({
-        body: handler.default(req)
+        body: handler.default(req),
       });
 
       logRequest(true);
     } catch {
       req.respond({
         status: 500,
-        body: `Error: Unable to parse handler at ${req.url}`
+        body: `Error: Unable to parse handler at ${req.url}`,
       });
       logRequest(false);
     }
