@@ -1,6 +1,6 @@
-import { serve, ServerRequest } from "https://deno.land/std/http/server.ts";
-import { parse } from "https://deno.land/std/flags/mod.ts";
-import { red, green } from "https://deno.land/std/fmt/colors.ts";
+import { serve, ServerRequest } from "http/server.ts";
+import { parse } from "flags/mod.ts";
+import { red, green } from "fmt/colors.ts";
 
 async function createServer() {
     const args = parse(Deno.args, {
