@@ -4,10 +4,38 @@ an adaptation of [micro](https://github.com/zeit/micro) for [deno](https://deno.
 
 Except this one will serve any handlers it finds on the file system that mirror the request.
 
+## Install
+
+```sh
+deno install -n dencro --allow-net --allow-read https://raw.githubusercontent.com/hswolff/dencro/master/index.ts
+```
+
 ## Usage
 
 ```sh
-deno --allow-net --allow-read index.ts <directoryToServeFiles> [--port 8080]
+dencro <directoryToServeFiles> [--port 8080]
+```
+
+**Example:**
+
+```sh
+~ dencro . --port 8080
+Serving files from: ~
+Listening at http://localhost:8080/
+```
+
+## Development
+
+-   Clone the repo:
+
+```sh
+git clone https://github.com/hswolff/dencro.git
+```
+
+-   run dencro:
+
+```sh
+deno run --allow-net --allow-read index.ts <directoryToServeFiles> [--port 8080]
 ```
 
 ## Todo
