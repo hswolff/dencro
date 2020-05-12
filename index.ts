@@ -1,4 +1,4 @@
-import * from "./deps.ts";
+import { serve, ServerRequest, parse, red, green } from "./deps.ts";
 
 async function createServer() {
   const args = parse(Deno.args, {
@@ -11,7 +11,7 @@ async function createServer() {
   if (args._.length === 1) {
     const directoryArg = args._[0];
     try {
-      const fullPath = await Deno.realpath(directoryArg);
+      const fullPath = await Deno.realPath(String(directoryArg));
       Deno.chdir(fullPath);
     } catch (error) {
       console.error(red(`Unable to serve files from: ${directoryArg}`));
@@ -73,9 +73,9 @@ export async function getHandlerPath(requestUrl: string): Promise<string> {
 
   let result;
   try {
-    result = await Deno.realpath("." + requestAsFile + ".ts");
+    result = await Deno.realPath("." + requestAsFile + ".ts");
   } catch {
-    result = await Deno.realpath("." + `${requestUrl}/index` + ".ts");
+    result = await Deno.realPath("." + `${requestUrl}/index` + ".ts");
   }
 
   return result;
