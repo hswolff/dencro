@@ -13,8 +13,12 @@ deno install -n dencro --allow-net --allow-read https://raw.githubusercontent.co
 ## Usage
 
 ```sh
-dencro <directoryToServeFiles> [--port 8080]
+dencro [directory] [options]
 ```
+
+- `[directory]` - directory which you want to serve
+- `[options]` - Aditional options
+  - `--port` - set the port on which to serve
 
 **Example:**
 
@@ -26,13 +30,13 @@ Listening at http://localhost:8080/
 
 ## Development
 
--   Clone the repo:
+- Clone the repo:
 
 ```sh
 git clone https://github.com/hswolff/dencro.git
 ```
 
--   run dencro:
+- run dencro:
 
 ```sh
 deno run --allow-net --allow-read index.ts <directoryToServeFiles> [--port 8080]
