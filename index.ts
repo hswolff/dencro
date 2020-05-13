@@ -34,6 +34,7 @@ async function createServer() {
     const logRequest = createLogRequest(req);
 
     let handlerPath;
+
     try {
       handlerPath = await getHandlerPath(req.url);
     } catch (error) {
@@ -62,6 +63,7 @@ async function createServer() {
     }
   }
 }
+
 if (import.meta.main) {
   createServer();
 }
