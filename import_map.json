@@ -1,7 +1,0 @@
-{
-  "imports": {
-    "http/": "https://deno.land/std/http/",
-    "fmt/": "https://deno.land/std/fmt/",
-    "flags/": "https://deno.land/std/flags/"
-  }
-}
