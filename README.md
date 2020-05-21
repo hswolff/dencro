@@ -42,6 +42,8 @@ git clone https://github.com/hswolff/dencro.git
 deno run --allow-net --allow-read index.ts <directoryToServeFiles> [--port 8080]
 ```
 
+**Note:** Make sure to format everything using the `deno fmt` command before pushing the changes.
+
 ## Todo
 
 - [x] Add [command line argument parsing](https://deno.land/std/flags/)
